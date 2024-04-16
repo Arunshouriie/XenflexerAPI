@@ -33,3 +33,4 @@ tzdata
 urllib3
 validators
 win32-setctime
+django-phone-field
