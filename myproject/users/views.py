@@ -3,13 +3,37 @@ from django.contrib.auth import login
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from knox.views import LoginView as KnoxLoginView
 
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, viewsets
 from rest_framework.response import Response
 from knox.models import AuthToken
 from .serializers import UserSerializer, RegisterSerializer, ChangePasswordSerializer
 from django.views.decorators.debug import sensitive_post_parameters
 
 from rest_framework.views import APIView
+from .models import TimesheetEntry, UserProfile
+from .serializers import TimesheetEntrySerializer, UserProfileSerializer
+
+class TimesheetEntryListCreate(generics.ListCreateAPIView):
+    queryset = TimesheetEntry.objects.all()
+    serializer_class = TimesheetEntrySerializer
+
+class TimesheetEntryRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = TimesheetEntry.objects.all()
+    serializer_class = TimesheetEntrySerializer
+
+class TimesheetEntryListCreate(generics.ListCreateAPIView):
+    serializer_class = TimesheetEntrySerializer
+
+    def get_queryset(self):
+        approval_status = self.request.query_params.get('approval_status', None)
+        if approval_status is not None:
+            return TimesheetEntry.objects.filter(approval_status=approval_status)
+        return TimesheetEntry.objects.all()
+
+class UserProfileView(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+
 
 # Register API
 class RegisterAPI(generics.GenericAPIView):

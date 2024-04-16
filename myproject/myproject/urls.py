@@ -16,9 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
     path('', include('users.urls')),
     path('api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),

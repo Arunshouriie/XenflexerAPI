@@ -1,6 +1,13 @@
 from rest_framework import generics, permissions
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from .models import TimesheetEntry, UserProfile
+
+class TimesheetEntrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TimesheetEntry
+        fields = '__all__'
+
 
 # User Serializer
 class UserSerializer(serializers.ModelSerializer):
@@ -25,6 +32,11 @@ class UserSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
     fields = ('id', 'username', 'email')
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = '__all__'
 
 # Change Password
 from rest_framework import serializers
