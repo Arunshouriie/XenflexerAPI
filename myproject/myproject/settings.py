@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-%==7fdkvs5ewp_h2hc(tay3i)98y=u=-la6yv7e__ku22*523+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -51,9 +51,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'myproject.urls'
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000'
+]
 
 TEMPLATES = [
     {
@@ -78,10 +85,19 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+
+'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'opsdb',
+        'HOST': 'c-xenflexer.ldkjg54wy5a3cd.postgres.cosmos.azure.com',
+        'USER': 'citus',
+        'PASSWORD': 'ops@1504',
+        'sslmode' : 'require'
+    }  
 }
 
 
