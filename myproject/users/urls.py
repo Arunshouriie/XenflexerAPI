@@ -1,11 +1,14 @@
 from knox import views as knox_views
-from .views import LoginAPI, RegisterAPI, UserAPI, ChangePasswordView, TimesheetEntryListCreate, TimesheetEntryRetrieveUpdateDestroy, UserProfileView
+from .views import LoginAPI, RegisterAPI, UserAPI, ChangePasswordView, TimesheetEntryListCreate, TimesheetEntryRetrieveUpdateDestroy, UserProfileView, DocumentUploadListCreate, DocumentUploadRetrieveUpdateDestroy, voluntarydisclosureListCreate, voluntarydisclosureRetrieveUpdateDestroy, WorkexperienceView, EducationView
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 
 router = DefaultRouter()
-router.register(r'profile', UserProfileView, basename='user_profile')
+router.register(r'profile', UserProfileView, basename='user_profile'),
+router.register(r'workexperience', WorkexperienceView, basename='work_experience'),
+router.register(r'education', EducationView, basename='education')
+
 
 urlpatterns = [
     path('api/register/', RegisterAPI.as_view(), name='register'),
@@ -17,6 +20,10 @@ urlpatterns = [
     path('timesheets/', TimesheetEntryListCreate.as_view(), name='timesheet-list-create'),
     path('timesheets/<int:pk>/', TimesheetEntryRetrieveUpdateDestroy.as_view(), name='timesheet-detail'),
     path('', include(router.urls)),
+     path('documents/', DocumentUploadListCreate.as_view(), name='document-upload-list-create'),
+    path('documents/<int:pk>/', DocumentUploadRetrieveUpdateDestroy.as_view(), name='document-upload-detail'),
+    path('multiple_choice_questions/', voluntarydisclosureListCreate.as_view(), name='multiple-choice-question-list-create'),
+    path('multiple_choice_questions/<int:pk>/', voluntarydisclosureRetrieveUpdateDestroy.as_view(), name='multiple-choice-question-detail'),
 ]
 
 # from django.urls import path

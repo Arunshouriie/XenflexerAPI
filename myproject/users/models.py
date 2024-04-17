@@ -6,6 +6,7 @@ from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
 from django.core.mail import send_mail  
 from django.db import models
+from django.contrib.postgres.fields import DateRangeField
 from django.contrib.auth.models import User
 
 class TimesheetEntry(models.Model):
@@ -19,6 +20,33 @@ class TimesheetEntry(models.Model):
         ('Pending', 'Pending')
     ]
     approval_status = models.CharField(max_length=20, choices=APPROVAL_CHOICES)
+
+class workexpereience(models.Model):
+    job_title = models.CharField(max_length=100, blank=True, null=True)
+    location = models.CharField(max_length=100, blank=True, null=True)
+    company_name = models.CharField(max_length=100, blank=True, null=True)
+    select_period = DateRangeField()
+
+class education(models.Model):
+    university = models.CharField(max_length=100, blank=True, null=True)
+    graduation = models.CharField(max_length=100, blank=True, null=True)
+    field_of_study = models.CharField(max_length=100, blank=True, null=True)
+    select_period = DateRangeField()
+
+class DocumentUpload(models.Model):
+    certificate = models.FileField(upload_to='certificates/')
+    resume = models.FileField(upload_to='resumes/')
+    tax_document = models.FileField(upload_to='tax_documents/')
+    proof_of_identification = models.FileField(upload_to='proof_of_identifications/')
+    agreement = models.FileField(upload_to='agreements/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)   
+
+class voluntary_disclosures(models.Model):
+    text = models.CharField(max_length=255)
+    choices = [
+        ('yes', 'yes'),
+        ('no', 'no')
+    ] 
 
 class UserProfile(models.Model):
     mobile = PhoneField(blank=True, help_text='Contact phone number')

@@ -1,13 +1,31 @@
 from rest_framework import generics, permissions
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import TimesheetEntry, UserProfile
+from .models import TimesheetEntry, UserProfile, DocumentUpload, voluntary_disclosures, workexpereience, education
 
 class TimesheetEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = TimesheetEntry
         fields = '__all__'
 
+class workexpereienceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = workexpereience
+        fields = '__all__'
+
+class educationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = education
+        fields = '__all__'
+class DocumentUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DocumentUpload
+        fields = '__all__'
+
+class voluntarydisclosureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = voluntary_disclosures
+        fields = ['id', 'text', 'choices']
 
 # User Serializer
 class UserSerializer(serializers.ModelSerializer):

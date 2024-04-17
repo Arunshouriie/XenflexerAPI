@@ -10,9 +10,8 @@ from .serializers import UserSerializer, RegisterSerializer, ChangePasswordSeria
 from django.views.decorators.debug import sensitive_post_parameters
 
 from rest_framework.views import APIView
-from .models import TimesheetEntry, UserProfile
-from .serializers import TimesheetEntrySerializer, UserProfileSerializer
-
+from .models import TimesheetEntry, UserProfile, DocumentUpload, voluntary_disclosures, workexpereience, education
+from .serializers import TimesheetEntrySerializer, UserProfileSerializer, DocumentUploadSerializer, voluntarydisclosureSerializer, workexpereienceSerializer, educationSerializer
 class TimesheetEntryListCreate(generics.ListCreateAPIView):
     queryset = TimesheetEntry.objects.all()
     serializer_class = TimesheetEntrySerializer
@@ -34,6 +33,29 @@ class UserProfileView(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
+class WorkexperienceView(viewsets.ModelViewSet):
+    queryset = workexpereience.objects.all()
+    serializer_class = workexpereienceSerializer
+
+class EducationView(viewsets.ModelViewSet):
+    queryset = education.objects.all()
+    serializer_class = educationSerializer
+
+class DocumentUploadListCreate(generics.ListCreateAPIView):
+    queryset = DocumentUpload.objects.all()
+    serializer_class = DocumentUploadSerializer
+
+class DocumentUploadRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = DocumentUpload.objects.all()
+    serializer_class = DocumentUploadSerializer
+
+class voluntarydisclosureListCreate(generics.ListCreateAPIView):
+    queryset = voluntary_disclosures.objects.all()
+    serializer_class = voluntarydisclosureSerializer
+
+class voluntarydisclosureRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = voluntary_disclosures.objects.all()
+    serializer_class = voluntarydisclosureSerializer
 
 # Register API
 class RegisterAPI(generics.GenericAPIView):
