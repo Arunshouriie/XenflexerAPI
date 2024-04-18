@@ -1,0 +1,6 @@
+# All python libraries
+/myproject/__pycache__
+/myproject/users/__pycache__
+
+# local migrations
+/myproject/users/migrations
