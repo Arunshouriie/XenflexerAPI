@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import TimesheetEntry, UserProfile, DocumentUpload, voluntary_disclosures, workexpereience, education
+from .models import TimesheetEntry, UserProfile, DocumentUpload, voluntary_disclosures, workexpereience, education, InterestSignup, Salescontact
 
 class TimesheetEntrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -56,6 +56,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = '__all__'
 
+class InterestSignupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InterestSignup
+        fields = '__all__'
+
+class SalescontactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Salescontact
+        fields = '__all__'
 # Change Password
 from rest_framework import serializers
 from django.contrib.auth.models import User

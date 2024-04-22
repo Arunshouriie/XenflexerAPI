@@ -60,7 +60,33 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
+class InterestSignup(models.Model):
+    full_name = models.CharField(max_length=100, blank=True, null=True)
+    phone_number = PhoneField(blank=True, help_text='Contact phone number')
+    email = models.EmailField(max_length=70,blank=True,unique=True, null = True)
+    INTEREST_CHOICES =  [
+        ('Non-Entry-Level Positions', 'Non-Entry-Level Positions'),
+        ('Entry-Level Positions', 'Entry-Level Positions')
+    ] 
+    What_type_of_job_opportunities_are_you_most_interested_in = models.CharField(max_length=255, choices=INTEREST_CHOICES)
+    JOB_CHOICES =  [
+        ('Permanent Positions', 'Permanent Positions'),
+        ('Contract Positions', 'Contract Positions')
+    ] 
+    Are_you_interested_in_permanent_or_contract_job_opportunities = models.CharField(max_length=255, choices=JOB_CHOICES)
 
+    CONTRACT_CHOICES = [
+        ('Join with a new contract found by XenFlexer', 'Join with a new contract found by XenFlexer'),
+        ('Join XenFlexer with a new contract I secure independently', 'Join XenFlexer with a new contract I secure independently'),
+        ('Join XenFlexer with my current ongoing project', 'Join XenFlexer with my current ongoing project')
+    ]
+    How_would_you_prefer_to_join_our_team =  models.CharField(max_length=255, choices=CONTRACT_CHOICES, help_text='Applicable only if you selected "Contract Positions" above.')
+
+class Salescontact(models.Model):
+    first_name = models.CharField(max_length=100, blank=True, null=True)
+    last_name = models.CharField(max_length=100, blank=True, null=True)
+    work_email = models.EmailField(max_length=70,blank=True,unique=True, null = True)
+    message = models.CharField(max_length=100, blank=True, null=True)
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):

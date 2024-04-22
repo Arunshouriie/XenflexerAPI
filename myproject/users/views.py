@@ -10,8 +10,9 @@ from .serializers import UserSerializer, RegisterSerializer, ChangePasswordSeria
 from django.views.decorators.debug import sensitive_post_parameters
 
 from rest_framework.views import APIView
-from .models import TimesheetEntry, UserProfile, DocumentUpload, voluntary_disclosures, workexpereience, education
-from .serializers import TimesheetEntrySerializer, UserProfileSerializer, DocumentUploadSerializer, voluntarydisclosureSerializer, workexpereienceSerializer, educationSerializer
+from .models import TimesheetEntry, UserProfile, DocumentUpload, voluntary_disclosures, workexpereience, education, InterestSignup, Salescontact
+from .serializers import TimesheetEntrySerializer, UserProfileSerializer, DocumentUploadSerializer, voluntarydisclosureSerializer, workexpereienceSerializer, educationSerializer, InterestSignupSerializer, SalescontactSerializer
+
 class TimesheetEntryListCreate(generics.ListCreateAPIView):
     queryset = TimesheetEntry.objects.all()
     serializer_class = TimesheetEntrySerializer
@@ -88,6 +89,41 @@ class UserAPI(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+
+# job_opportunities/views.py
+from rest_framework import generics
+from rest_framework.response import Response
+from .models import InterestSignup
+from .serializers import InterestSignupSerializer
+from django.core.mail import send_mail
+
+class InterestsignupCreateView(generics.CreateAPIView):
+    queryset = InterestSignup.objects.all()
+    serializer_class = InterestSignupSerializer
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        # Send acknowledgement email
+        user_email = request.data.get('email')
+        admin_email = 'recruitment@xenspire.com'  # Replace with your admin email
+        send_mail(
+            'Acknowledgement Email',
+            'Thank you for submitting your information!',
+            'your_email@example.com',
+            [user_email, admin_email],
+            fail_silently=False,
+        )
+        return response
+    
+    def get(self, request, *args, **kwargs):
+        user_info = InterestSignup.objects.all()
+        serializer = InterestSignupSerializer(user_info, many=True)
+        return Response(serializer.data)
+
+class SalescontactView(viewsets.ModelViewSet):
+    queryset = Salescontact.objects.all()
+    serializer_class = SalescontactSerializer
+
 
 from rest_framework import generics, permissions
 

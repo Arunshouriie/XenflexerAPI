@@ -1,5 +1,5 @@
 from knox import views as knox_views
-from .views import LoginAPI, RegisterAPI, UserAPI, ChangePasswordView, TimesheetEntryListCreate, TimesheetEntryRetrieveUpdateDestroy, UserProfileView, DocumentUploadListCreate, DocumentUploadRetrieveUpdateDestroy, voluntarydisclosureListCreate, voluntarydisclosureRetrieveUpdateDestroy, WorkexperienceView, EducationView
+from .views import LoginAPI, RegisterAPI, UserAPI, ChangePasswordView, TimesheetEntryListCreate, TimesheetEntryRetrieveUpdateDestroy, UserProfileView, DocumentUploadListCreate, DocumentUploadRetrieveUpdateDestroy, voluntarydisclosureListCreate, voluntarydisclosureRetrieveUpdateDestroy, WorkexperienceView, EducationView, InterestsignupCreateView, SalescontactView
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
@@ -8,6 +8,7 @@ router = DefaultRouter()
 router.register(r'profile', UserProfileView, basename='user_profile'),
 router.register(r'workexperience', WorkexperienceView, basename='work_experience'),
 router.register(r'education', EducationView, basename='education')
+router.register(r'contactsales', SalescontactView, basename = 'Salescontact')
 
 
 urlpatterns = [
@@ -24,6 +25,7 @@ urlpatterns = [
     path('documents/<int:pk>/', DocumentUploadRetrieveUpdateDestroy.as_view(), name='document-upload-detail'),
     path('multiple_choice_questions/', voluntarydisclosureListCreate.as_view(), name='multiple-choice-question-list-create'),
     path('multiple_choice_questions/<int:pk>/', voluntarydisclosureRetrieveUpdateDestroy.as_view(), name='multiple-choice-question-detail'),
+    path('interest', InterestsignupCreateView.as_view(), name= 'interest-signup'),
 ]
 
 # from django.urls import path
