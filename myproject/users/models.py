@@ -13,13 +13,14 @@ class TimesheetEntry(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     hours_worked = models.DecimalField(max_digits=5, decimal_places=2)
-    project_description = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     APPROVAL_CHOICES = [
-        ('Approval', 'Approval'),
-        ('Pending', 'Pending')
+        ('Approved', 'Approved'),
+        ('Pending', 'Pending'),
+        ('Rejected', 'Rejected')
     ]
     approval_status = models.CharField(max_length=20, choices=APPROVAL_CHOICES)
+    is_active = models.BooleanField(default=False)
 
 class workexpereience(models.Model):
     job_title = models.CharField(max_length=100, blank=True, null=True)
@@ -42,11 +43,16 @@ class DocumentUpload(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)   
 
 class voluntary_disclosures(models.Model):
-    text = models.CharField(max_length=255)
-    choices = [
+    UPDATE_CHOICES = [
         ('yes', 'yes'),
         ('no', 'no')
     ] 
+    selectYESifyouareokayreceivingupdatesonnewjobsbeingposted = models.CharField(max_length=255, choices = UPDATE_CHOICES, null = True)
+    RECIEVE_CHOICES = [
+        ('yes', 'yes'),
+        ('no', 'no')
+    ] 
+    selectYESifyouareokayreceivingEmailNotificationforNewsletter = models.CharField(max_length=255, choices = UPDATE_CHOICES, null = True)
 
 class UserProfile(models.Model):
     mobile = PhoneField(blank=True, help_text='Contact phone number')
@@ -60,7 +66,7 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
-class InterestSignup(models.Model):
+class JobOpportunity(models.Model):
     full_name = models.CharField(max_length=100, blank=True, null=True)
     phone_number = PhoneField(blank=True, help_text='Contact phone number')
     email = models.EmailField(max_length=70,blank=True,unique=True, null = True)
@@ -68,25 +74,37 @@ class InterestSignup(models.Model):
         ('Non-Entry-Level Positions', 'Non-Entry-Level Positions'),
         ('Entry-Level Positions', 'Entry-Level Positions')
     ] 
-    What_type_of_job_opportunities_are_you_most_interested_in = models.CharField(max_length=255, choices=INTEREST_CHOICES)
+    job_type = models.CharField(max_length=255, choices=INTEREST_CHOICES)
     JOB_CHOICES =  [
         ('Permanent Positions', 'Permanent Positions'),
         ('Contract Positions', 'Contract Positions')
     ] 
-    Are_you_interested_in_permanent_or_contract_job_opportunities = models.CharField(max_length=255, choices=JOB_CHOICES)
+    contract_type = models.CharField(max_length=255, choices=JOB_CHOICES)
 
     CONTRACT_CHOICES = [
         ('Join with a new contract found by XenFlexer', 'Join with a new contract found by XenFlexer'),
         ('Join XenFlexer with a new contract I secure independently', 'Join XenFlexer with a new contract I secure independently'),
         ('Join XenFlexer with my current ongoing project', 'Join XenFlexer with my current ongoing project')
     ]
-    How_would_you_prefer_to_join_our_team =  models.CharField(max_length=255, choices=CONTRACT_CHOICES, help_text='Applicable only if you selected "Contract Positions" above.')
+    joining_preference =  models.CharField(max_length=255, choices=CONTRACT_CHOICES, help_text='Applicable only if you selected "Contract Positions" above.')
+
+    def __str__(self):
+        return f"{self.full_name}"
 
 class Salescontact(models.Model):
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
     work_email = models.EmailField(max_length=70,blank=True,unique=True, null = True)
     message = models.CharField(max_length=100, blank=True, null=True)
+
+class ConatctUs(models.Model):
+    first_name = models.CharField(max_length=100, blank=True, null=True)
+    last_name = models.CharField(max_length=100, blank=True, null=True)
+    email = models.EmailField(max_length=70,blank=True, null = True)
+    company_name = models.CharField(max_length=100, blank=True, null=True)
+    phone_number = PhoneField(blank=True, help_text='Contact phone number')
+    Reason_for_reaching_out = models.CharField(max_length=100, blank=True, null=True)
+
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):

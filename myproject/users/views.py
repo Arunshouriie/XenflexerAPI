@@ -8,10 +8,17 @@ from rest_framework.response import Response
 from knox.models import AuthToken
 from .serializers import UserSerializer, RegisterSerializer, ChangePasswordSerializer
 from django.views.decorators.debug import sensitive_post_parameters
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from django.core.mail import send_mail
+from .models import JobOpportunity
+from .serializers import JobOpportunitySerializer
+from django.conf import settings
 
 from rest_framework.views import APIView
-from .models import TimesheetEntry, UserProfile, DocumentUpload, voluntary_disclosures, workexpereience, education, InterestSignup, Salescontact
-from .serializers import TimesheetEntrySerializer, UserProfileSerializer, DocumentUploadSerializer, voluntarydisclosureSerializer, workexpereienceSerializer, educationSerializer, InterestSignupSerializer, SalescontactSerializer
+from .models import TimesheetEntry, UserProfile, DocumentUpload, voluntary_disclosures, workexpereience, education, Salescontact, ConatctUs
+from .serializers import TimesheetEntrySerializer, UserProfileSerializer, DocumentUploadSerializer, voluntarydisclosureSerializer, workexpereienceSerializer, educationSerializer, SalescontactSerializer, ConatctUsSerializer, UserTimesheetEntrySerializer
 
 class TimesheetEntryListCreate(generics.ListCreateAPIView):
     queryset = TimesheetEntry.objects.all()
@@ -29,6 +36,11 @@ class TimesheetEntryListCreate(generics.ListCreateAPIView):
         if approval_status is not None:
             return TimesheetEntry.objects.filter(approval_status=approval_status)
         return TimesheetEntry.objects.all()
+
+class UserTimesheetEntryView(viewsets.ModelViewSet):
+   queryset = TimesheetEntry.objects.all()
+   serializer_class = UserTimesheetEntrySerializer
+
 
 class UserProfileView(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
@@ -90,39 +102,55 @@ class UserAPI(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
-# job_opportunities/views.py
-from rest_framework import generics
-from rest_framework.response import Response
-from .models import InterestSignup
-from .serializers import InterestSignupSerializer
-from django.core.mail import send_mail
-
-class InterestsignupCreateView(generics.CreateAPIView):
-    queryset = InterestSignup.objects.all()
-    serializer_class = InterestSignupSerializer
-
-    def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-        # Send acknowledgement email
-        user_email = request.data.get('email')
-        admin_email = 'recruitment@xenspire.com'  # Replace with your admin email
-        send_mail(
-            'Acknowledgement Email',
-            'Thank you for submitting your information!',
-            'your_email@example.com',
-            [user_email, admin_email],
-            fail_silently=False,
-        )
-        return response
-    
-    def get(self, request, *args, **kwargs):
-        user_info = InterestSignup.objects.all()
-        serializer = InterestSignupSerializer(user_info, many=True)
-        return Response(serializer.data)
-
+ADMIN_EMAIL = "recruitment@xenspire.com"
 class SalescontactView(viewsets.ModelViewSet):
     queryset = Salescontact.objects.all()
     serializer_class = SalescontactSerializer
+
+    def perform_create(self, serializer):
+
+       if serializer.is_valid():
+        Salescontact = serializer.save()
+
+        email_message = (
+            f"Hello {Salescontact.first_name},\n\n"
+            "Thank you for contacting the Xenflexer sales team! We appreciate you reaching out and letting us know your interest in our products.\n"
+            "A member of our sales team will be in touch with you shortly to discuss your inquiry in more detail and answer any questions you may have. We aim to respond to all inquiries within one business day.\n\n"
+            "In the meantime, you can explore our website at https://www.xenflexer.com to learn more about Xenflexer's offerings and how our solutions can benefit you.\n"
+            "We look forward to connecting with you soon! \n\n"
+            "Sincerely,\n"
+            "Xenspire Group"
+        )
+        # Send acknowledgment email to the user
+        send_mail(
+            subject="Your Inquiry to Xenflexer Sales",
+            message=email_message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[Salescontact.work_email],
+        )
+
+        admin_email_message = (
+            "Hi team,\n\n"
+            f"We have a new interest for {Salescontact.first_name} to join our Xenflexer program. Below are the details:\n\n"
+            f"First Name: {Salescontact.first_name}\n"
+            f"Last Name: {Salescontact.last_name}\n"
+            f"Work Email: {Salescontact.work_email}\n"
+            f"Message: {Salescontact.message}\n"
+            "Kindly take cognizance of the inquiry and get in touch with the candidate.\n\n"
+            "Regards,\n"
+            "Xenspire Team"
+        )
+        # Send email to the admin
+        send_mail(
+            subject="Hire Inquiry Received",
+            message=admin_email_message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[ADMIN_EMAIL],
+        )
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+       else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 from rest_framework import generics, permissions
@@ -167,4 +195,115 @@ class ChangePasswordView(generics.UpdateAPIView):
 
             return Response(response)
 
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+ADMIN_EMAIL = "recruitment@xenspire.com"
+
+
+class JobOpportunityListCreateView(generics.ListCreateAPIView):
+    queryset = JobOpportunity.objects.all()
+    serializer_class = JobOpportunitySerializer
+
+    def perform_create(self, serializer):
+
+       if serializer.is_valid():
+        job_opportunity = serializer.save()
+
+        email_message = (
+            f"Hello {job_opportunity.full_name},\n\n"
+            "Thank you for your interest in Xenflexer! We're thrilled that you took the time to fill out our interest form.\n"
+            "We understand that you're looking for joining us in the Xenflexer program, and we're confident that it will be a valuable asset for you.\n\n"
+            "In the coming days, you'll receive a call from us with more information about the program.\n"
+            "In the meantime, feel free to explore our website at https://www.xenflexer.com to learn more about Xenflexer and how it can help you achieve your goals.\n\n"
+            "We're also happy to answer any questions you may have. Please don't hesitate to reply to this email.\n\n"
+            "Thanks again for your interest!\n"
+            "Sincerely,\n"
+            "Xenspire Group"
+        )
+        # Send acknowledgment email to the user
+        send_mail(
+            subject="Thanks for Your Interest in Xenspire! ",
+            message=email_message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[job_opportunity.email],
+        )
+
+        admin_email_message = (
+            "Hi team,\n\n"
+            f"We have a new interest for {job_opportunity.full_name} to join our Xenflexer program. Below are the details:\n\n"
+            f"Full Name: {job_opportunity.full_name}\n"
+            f"Email: {job_opportunity.email}\n"
+            f"Phone Number: {job_opportunity.phone_number}\n"
+            f"Job Type: {job_opportunity.job_type}\n"
+            f"Contract Type: {job_opportunity.contract_type}\n"
+            f"Joining Preference: {job_opportunity.joining_preference}\n\n"
+            "Kindly take cognizance of the inquiry and get in touch with the candidate.\n\n"
+            "Regards,\n"
+            "Xenspire Team"
+        )
+        # Send email to the admin
+        send_mail(
+            subject="Interest: Flexer Interest Received",
+            message=admin_email_message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[ADMIN_EMAIL],
+        )
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+       else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+ADMIN_EMAIL = "recruitment@xenspire.com"
+class ConatctUsView(viewsets.ModelViewSet):
+    queryset = ConatctUs.objects.all()
+    serializer_class = ConatctUsSerializer
+
+    def perform_create(self, serializer):
+
+       if serializer.is_valid():
+        ConatctUs = serializer.save()
+
+        email_message = (
+            f"Hello {ConatctUs.first_name},\n\n"
+            "Thank you for contacting the Xenflexer sales team! We appreciate you reaching out and letting us know your interest in our products.\n"
+            "A member of our sales team will be in touch with you shortly to discuss your inquiry in more detail and answer any questions you may have. We aim to respond to all inquiries within one business day.\n\n"
+            "In the meantime, you can explore our website at https://www.xenflexer.com to learn more about Xenflexer's offerings and how our solutions can benefit you.\n"
+            "We look forward to connecting with you soon! \n\n"
+            "Sincerely,\n"
+            "Xenspire Group"
+        )
+        # Send acknowledgment email to the user
+        send_mail(
+            subject="Thank you for contacting Xenflexer",
+            message=email_message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[ConatctUs.email],
+        )
+
+        admin_email_message = (
+            "Hi team,\n\n"
+            f"We have a new interest for {ConatctUs.first_name} to join our Xenflexer program. Below are the details:\n\n"
+            f"First Name: {ConatctUs.first_name}\n"
+            f"Last Name: {ConatctUs.last_name}\n"
+            f"Work Email: {ConatctUs.email}\n"
+            f"Company Name: {ConatctUs.company_name} "
+            f"Phone Number: {ConatctUs.phone_number}\n"
+            f"Reason for Reaching Out: {ConatctUs.Reason_for_reaching_out}\n"
+            "Kindly take cognizance of the inquiry and get in touch with the candidate.\n\n"
+            "Regards,\n"
+            "Xenspire Team"
+        )
+        # Send email to the admin
+        send_mail(
+            subject="Contact Inquiry Received",
+            message=admin_email_message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[ADMIN_EMAIL],
+        )
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+       else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

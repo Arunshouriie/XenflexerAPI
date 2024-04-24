@@ -1,12 +1,17 @@
 from rest_framework import generics, permissions
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import TimesheetEntry, UserProfile, DocumentUpload, voluntary_disclosures, workexpereience, education, InterestSignup, Salescontact
+from .models import TimesheetEntry, UserProfile, DocumentUpload, voluntary_disclosures, workexpereience, education, JobOpportunity, Salescontact, ConatctUs
 
 class TimesheetEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = TimesheetEntry
         fields = '__all__'
+
+class UserTimesheetEntrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TimesheetEntry
+        fields = ['start_date', 'end_date', 'hours_worked', 'is_active']
 
 class workexpereienceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,8 +30,12 @@ class DocumentUploadSerializer(serializers.ModelSerializer):
 class voluntarydisclosureSerializer(serializers.ModelSerializer):
     class Meta:
         model = voluntary_disclosures
-        fields = ['id', 'text', 'choices']
+        fields = '__all__'
 
+class ConatctUsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConatctUs
+        fields = '__all__'
 # User Serializer
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -56,9 +65,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = '__all__'
 
-class InterestSignupSerializer(serializers.ModelSerializer):
+class JobOpportunitySerializer(serializers.ModelSerializer):
     class Meta:
-        model = InterestSignup
+        model = JobOpportunity
         fields = '__all__'
 
 class SalescontactSerializer(serializers.ModelSerializer):
