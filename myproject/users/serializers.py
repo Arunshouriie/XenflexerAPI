@@ -8,10 +8,28 @@ class TimesheetEntrySerializer(serializers.ModelSerializer):
         model = TimesheetEntry
         fields = '__all__'
 
+    def create(self, validated_data):
+        users_data = validated_data.pop('users', [])
+        timesheet = TimesheetEntry.objects.create(**validated_data)
+
+        # Use set() to assign users to the timesheet
+        timesheet.users.set(users_data)
+
+        return timesheet
+
+    def update(self, instance, validated_data):
+        users_data = validated_data.pop('users', None)
+
+        if users_data is not None:
+            # Use set() to update the users for the timesheet
+            instance.users.set(users_data)
+
+        return super().update(instance, validated_data)
+
 class UserTimesheetEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = TimesheetEntry
-        fields = ['start_date', 'end_date', 'hours_worked', 'is_active']
+        fields = ['id','start_date', 'end_date', 'hours_worked', 'is_active']
 
 class workexpereienceSerializer(serializers.ModelSerializer):
     class Meta:

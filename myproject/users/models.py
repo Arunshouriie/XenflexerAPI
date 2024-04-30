@@ -13,7 +13,7 @@ class TimesheetEntry(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     hours_worked = models.DecimalField(max_digits=5, decimal_places=2)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    users = models.ManyToManyField(User)
     APPROVAL_CHOICES = [
         ('Approved', 'Approved'),
         ('Pending', 'Pending'),
@@ -70,23 +70,23 @@ class JobOpportunity(models.Model):
     full_name = models.CharField(max_length=100, blank=True, null=True)
     phone_number = PhoneField(blank=True, help_text='Contact phone number')
     email = models.EmailField(max_length=70,blank=True,unique=True, null = True)
-    INTEREST_CHOICES =  [
-        ('Non-Entry-Level Positions', 'Non-Entry-Level Positions'),
-        ('Entry-Level Positions', 'Entry-Level Positions')
-    ] 
-    job_type = models.CharField(max_length=255, choices=INTEREST_CHOICES)
-    JOB_CHOICES =  [
-        ('Permanent Positions', 'Permanent Positions'),
-        ('Contract Positions', 'Contract Positions')
-    ] 
-    contract_type = models.CharField(max_length=255, choices=JOB_CHOICES)
+    # INTEREST_CHOICES =  [
+    #     ('Non-Entry-Level Positions', 'Non-Entry-Level Positions'),
+    #     ('Entry-Level Positions', 'Entry-Level Positions')
+    # ] 
+    job_type = models.CharField(max_length=255)
+    # JOB_CHOICES =  [
+    #     ('Permanent Positions', 'Permanent Positions'),
+    #     ('Contract Positions', 'Contract Positions')
+    # ] 
+    contract_type = models.CharField(max_length=255)
 
-    CONTRACT_CHOICES = [
-        ('Join with a new contract found by XenFlexer', 'Join with a new contract found by XenFlexer'),
-        ('Join XenFlexer with a new contract I secure independently', 'Join XenFlexer with a new contract I secure independently'),
-        ('Join XenFlexer with my current ongoing project', 'Join XenFlexer with my current ongoing project')
-    ]
-    joining_preference =  models.CharField(max_length=255, choices=CONTRACT_CHOICES, help_text='Applicable only if you selected "Contract Positions" above.')
+    # CONTRACT_CHOICES = [
+    #     ('Join with a new contract found by XenFlexer', 'Join with a new contract found by XenFlexer'),
+    #     ('Join XenFlexer with a new contract I secure independently', 'Join XenFlexer with a new contract I secure independently'),
+    #     ('Join XenFlexer with my current ongoing project', 'Join XenFlexer with my current ongoing project')
+    # ]
+    joining_preference =  models.CharField(max_length=255, help_text='Applicable only if you selected "Contract Positions" above.')
 
     def __str__(self):
         return f"{self.full_name}"
