@@ -26,7 +26,9 @@ class workexpereience(models.Model):
     job_title = models.CharField(max_length=100, blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
     company_name = models.CharField(max_length=100, blank=True, null=True)
-    select_period = DateRangeField()
+    startDate = models.DateField()
+    endDate = models.DateField()
+    currentCompany = models.BooleanField(default=False)
 
 class education(models.Model):
     university = models.CharField(max_length=100, blank=True, null=True)
@@ -63,7 +65,7 @@ class UserProfile(models.Model):
     country = models.CharField(max_length=100, blank=True, null=True)
     working_on_project = models.BooleanField(default=True)
     xenspire_is_the_employer = models.BooleanField(default=True)
-    do_you_want_xenspire_to_be = models.BooleanField(default=True)
+    do_you_want_xenspire_to_be = models.BooleanField(default=True) 
 
 
     def __str__(self):
