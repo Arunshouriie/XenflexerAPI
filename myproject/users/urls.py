@@ -1,5 +1,5 @@
 from knox import views as knox_views
-from .views import LoginAPI,LogoutView, RegisterAPI, UserAPI, ChangePasswordView, TimesheetEntryListCreate, TimesheetEntryRetrieveUpdateDestroy, UserProfileView, DocumentUploadListCreate, DocumentUploadRetrieveUpdateDestroy, voluntarydisclosureListCreate, voluntarydisclosureRetrieveUpdateDestroy, WorkexperienceView, EducationView, JobOpportunityListCreateView, SalescontactView, ConatctUsView, UserTimesheetEntryView
+from .views import LoginAPI,LogoutView, RegisterAPI, UploadresumeRetrieveUpdateDestroy, uploadresumelistcreate, UserAPI, ChangePasswordView, TimesheetEntryListCreate, TimesheetEntryRetrieveUpdateDestroy, UserProfileView, DocumentUploadListCreate, DocumentUploadRetrieveUpdateDestroy, voluntarydisclosureListCreate, voluntarydisclosureRetrieveUpdateDestroy, WorkexperienceView, EducationView, JobOpportunityListCreateView, SalescontactView, ConatctUsView, UserTimesheetEntryView
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
@@ -23,8 +23,10 @@ urlpatterns = [
     path('timesheets/', TimesheetEntryListCreate.as_view(), name='timesheet-list-create'),
     path('timesheets/<int:pk>/', TimesheetEntryRetrieveUpdateDestroy.as_view(), name='timesheet-detail'),
     path('', include(router.urls)),
-     path('documents/', DocumentUploadListCreate.as_view(), name='document-upload-list-create'),
+    path('documents/', DocumentUploadListCreate.as_view(), name='document-upload-list-create'),
     path('documents/<int:pk>/', DocumentUploadRetrieveUpdateDestroy.as_view(), name='document-upload-detail'),
+    path('upload/resume/', uploadresumelistcreate.as_view(), name='resume-upload-list-create'),
+    path('upload/resume/<int:pk>/', UploadresumeRetrieveUpdateDestroy.as_view(), name='resume-upload-detail'),
     path('multiple_choice_questions/', voluntarydisclosureListCreate.as_view(), name='multiple-choice-question-list-create'),
     path('multiple_choice_questions/<int:pk>/', voluntarydisclosureRetrieveUpdateDestroy.as_view(), name='multiple-choice-question-detail'),
     path('interestsignup', JobOpportunityListCreateView.as_view(), name= 'interest-signup'),

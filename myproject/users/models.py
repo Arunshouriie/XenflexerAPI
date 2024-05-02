@@ -42,6 +42,9 @@ class DocumentUpload(models.Model):
     agreement = models.FileField(upload_to='agreements/')
     uploaded_at = models.DateTimeField(auto_now_add=True)   
 
+class upload_resume(models.Model):
+    upload = models.FileField(upload_to='resume/')
+
 class voluntary_disclosures(models.Model):
     UPDATE_CHOICES = [
         ('yes', 'yes'),

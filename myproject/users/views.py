@@ -18,8 +18,8 @@ from .serializers import JobOpportunitySerializer
 from django.conf import settings
 from knox.auth import TokenAuthentication
 from rest_framework.views import APIView
-from .models import TimesheetEntry, UserProfile, DocumentUpload, voluntary_disclosures, workexpereience, education, Salescontact, ConatctUs
-from .serializers import TimesheetEntrySerializer, UserProfileSerializer, DocumentUploadSerializer, voluntarydisclosureSerializer, workexpereienceSerializer, educationSerializer, SalescontactSerializer, ConatctUsSerializer, UserTimesheetEntrySerializer
+from .models import TimesheetEntry, UserProfile, upload_resume, DocumentUpload, voluntary_disclosures, workexpereience, education, Salescontact, ConatctUs
+from .serializers import TimesheetEntrySerializer, UserProfileSerializer, uploadresumeSerializer, DocumentUploadSerializer, voluntarydisclosureSerializer, workexpereienceSerializer, educationSerializer, SalescontactSerializer, ConatctUsSerializer, UserTimesheetEntrySerializer
 
 class TimesheetEntryListCreate(generics.ListCreateAPIView):
     queryset = TimesheetEntry.objects.all()
@@ -83,6 +83,14 @@ class DocumentUploadListCreate(generics.ListCreateAPIView):
     queryset = DocumentUpload.objects.all()
     serializer_class = DocumentUploadSerializer
     # permission_classes = [permissions.IsAuthenticated]
+
+class uploadresumelistcreate(generics.ListCreateAPIView):
+    queryset = upload_resume.objects.all()
+    serializer_class = uploadresumeSerializer
+
+class UploadresumeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = upload_resume.objects.all()
+    serializer_class = uploadresumeSerializer
 
 class DocumentUploadRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = DocumentUpload.objects.all()
