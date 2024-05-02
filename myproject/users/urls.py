@@ -1,5 +1,5 @@
 from knox import views as knox_views
-from .views import LoginAPI,LogoutView, RegisterAPI, UploadresumeRetrieveUpdateDestroy, uploadresumelistcreate, UserAPI, ChangePasswordView, TimesheetEntryListCreate, TimesheetEntryRetrieveUpdateDestroy, UserProfileView, WorkexperienceView, voluntarydisclosureListCreate, voluntarydisclosureRetrieveUpdateDestroy, JobOpportunityListCreateView, SalescontactView, ConatctUsView, UserTimesheetEntryView, EducationView, DocumentUploadListCreate, DocumentUploadRetrieveUpdateDestroy
+from .views import RegisterView, LoginView, UploadresumeRetrieveUpdateDestroy, uploadresumelistcreate, UserAPI, ChangePasswordView, TimesheetEntryListCreate, TimesheetEntryRetrieveUpdateDestroy, UserProfileView, WorkexperienceView, voluntarydisclosureListCreate, voluntarydisclosureRetrieveUpdateDestroy, JobOpportunityListCreateView, SalescontactView, ConatctUsView, UserTimesheetEntryView, EducationView, DocumentUploadListCreate, DocumentUploadRetrieveUpdateDestroy
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
@@ -14,10 +14,12 @@ router.register(r'user/timesheets', UserTimesheetEntryView, basename = 'usertime
 
 
 urlpatterns = [
-    path('api/register/', RegisterAPI.as_view(), name='register'),
-    path('api/login/', LoginAPI.as_view(), name='login'),
-    path('api/logout/', knox_views.LogoutView.as_view(), name='logout'),
-    path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
+    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', LoginView.as_view(), name='login'),
+    # path('api/register/', RegisterAPI.as_view(), name='register'),
+    # path('api/login/', LoginAPI.as_view(), name='login'),
+    # path('api/logout/', knox_views.LogoutView.as_view(), name='logout'),
+    # path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
     path('api/user/', UserAPI.as_view(), name='user'),
     path('api/change-password/', ChangePasswordView.as_view(), name='change-password'),
     path('timesheets/', TimesheetEntryListCreate.as_view(), name='timesheet-list-create'),

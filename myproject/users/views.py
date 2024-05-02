@@ -20,11 +20,65 @@ from knox.auth import TokenAuthentication
 from rest_framework.views import APIView
 from .models import TimesheetEntry, UserProfile, myeducation, DocumentsUpload, myexperience, upload_resume, voluntary_disclosures, Salescontact, ConatctUs
 from .serializers import TimesheetEntrySerializer, UserProfileSerializer, uploadresumeSerializer, voluntarydisclosureSerializer, SalescontactSerializer, ConatctUsSerializer, UserTimesheetEntrySerializer, workexpereienceSerializer, educationSerializer, DocumentUploadSerializer
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from rest_framework_simplejwt.tokens import RefreshToken
+
+
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
+
+class RegisterView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        email = request.data.get('email')
+
+        if not username or not password or not email:
+            return Response({'error': 'Please provide all required fields.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if User.objects.filter(username=username).exists():
+            return Response({'error': 'Username already taken.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = User.objects.create_user(username=username, password=password, email=email)
+        user.save()
+
+        tokens = get_tokens_for_user(user)
+
+        return Response({'message': 'User created successfully', 'tokens': tokens}, status=status.HTTP_201_CREATED)
+
+
+class LoginView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if user is None:
+            return Response({'error': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        tokens = get_tokens_for_user(user)
+
+        return Response({'tokens': tokens})
+
 
 class TimesheetEntryListCreate(generics.ListCreateAPIView):
     queryset = TimesheetEntry.objects.all()
     serializer_class = TimesheetEntrySerializer
-    # permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save()
@@ -32,11 +86,11 @@ class TimesheetEntryListCreate(generics.ListCreateAPIView):
 class TimesheetEntryRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = TimesheetEntry.objects.all()
     serializer_class = TimesheetEntrySerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 class TimesheetEntryListCreate(generics.ListCreateAPIView):
     serializer_class = TimesheetEntrySerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         approval_status = self.request.query_params.get('approval_status', None)
@@ -47,8 +101,7 @@ class TimesheetEntryListCreate(generics.ListCreateAPIView):
 class UserTimesheetEntryView(viewsets.ModelViewSet):
    queryset = TimesheetEntry.objects.all()
    serializer_class = UserTimesheetEntrySerializer
-#    permission_classes = [permissions.IsAuthenticated]
-
+   permission_classes = [IsAuthenticated]
    def get_queryset(self):
         # Only return timesheets created by the logged-in user
         return TimesheetEntry.objects.filter(users=self.request.user)
@@ -60,19 +113,19 @@ class UserTimesheetEntryView(viewsets.ModelViewSet):
         # Get all timesheets assigned to the logged-in user, sorted by date (latest first)
         return TimesheetEntry.objects.filter(users=self.request.user, is_active=True).order_by('-start_date')
 
-class LogoutView(KnoxLogoutView):
-    permission_classes = (permissions.IsAuthenticated,)
+# class LogoutView(KnoxLogoutView):
+#     permission_classes = (permissions.IsAuthenticated,)
 
 class UserProfileView(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     # authentication_classes = (TokenAuthentication,) 
 
 class WorkexperienceView(viewsets.ModelViewSet):
     queryset = myexperience.objects.all()
     serializer_class = workexpereienceSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     def create(self, request, *args, **kwargs):
         # Ensure incoming data is a list
         if not isinstance(request.data, list):
@@ -92,7 +145,7 @@ class WorkexperienceView(viewsets.ModelViewSet):
 class EducationView(viewsets.ModelViewSet):
     queryset = myeducation.objects.all()
     serializer_class = educationSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     def create(self, request, *args, **kwargs):
         # Ensure incoming data is a list
         if not isinstance(request.data, list):
@@ -112,69 +165,69 @@ class EducationView(viewsets.ModelViewSet):
 class DocumentUploadListCreate(generics.ListCreateAPIView):
     queryset = DocumentsUpload.objects.all()
     serializer_class = DocumentUploadSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 class DocumentUploadRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = DocumentsUpload.objects.all()
     serializer_class = DocumentUploadSerializer
-
+    permission_classes = [IsAuthenticated]
 class UploadresumeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = upload_resume.objects.all()
     serializer_class = uploadresumeSerializer
-
+    permission_classes = [IsAuthenticated]
 class uploadresumelistcreate(generics.ListCreateAPIView):
     queryset = upload_resume.objects.all()
     serializer_class = uploadresumeSerializer
-
+    permission_classes = [IsAuthenticated]
 
 class voluntarydisclosureListCreate(generics.ListCreateAPIView):
     queryset = voluntary_disclosures.objects.all()
     serializer_class = voluntarydisclosureSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 class voluntarydisclosureRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = voluntary_disclosures.objects.all()
     serializer_class = voluntarydisclosureSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 # Register API
-class RegisterAPI(generics.GenericAPIView):
-    serializer_class = RegisterSerializer
+# class RegisterAPI(generics.GenericAPIView):
+#     serializer_class = RegisterSerializer
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        return Response({
-        "user": UserSerializer(user, context=self.get_serializer_context()).data,
-        "token": AuthToken.objects.create(user)[1]
-        })
+#     def post(self, request, *args, **kwargs):
+#         serializer = self.get_serializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         user = serializer.save()
+#         return Response({
+#         "user": UserSerializer(user, context=self.get_serializer_context()).data,
+#         "token": AuthToken.objects.create(user)[1]
+#         })
 
 # Login API
-class LoginAPI(KnoxLoginView):
-    permission_classes = (permissions.AllowAny,)
+# class LoginAPI(KnoxLoginView):
+#     permission_classes = (permissions.AllowAny,)
 
-    def post(self, request, *args, **kwargs):
-        username = request.data.get('username')
-        password = request.data.get('password')
+#     def post(self, request, *args, **kwargs):
+#         username = request.data.get('username')
+#         password = request.data.get('password')
         
-        user = authenticate(request, username=username, password=password)
-        if not user:
-            return Response(
-                {"error": "Invalid username or password"},
-                status=status.HTTP_401_UNAUTHORIZED
-            )
+#         user = authenticate(request, username=username, password=password)
+#         if not user:
+#             return Response(
+#                 {"error": "Invalid username or password"},
+#                 status=status.HTTP_401_UNAUTHORIZED
+#             )
         
-        _, token = AuthToken.objects.create(user)
-        return Response({
-            "user_id": user.id,
-            "username": user.username,
-            "token": token,
-            "email": user.email
-        })
+#         _, token = AuthToken.objects.create(user)
+#         return Response({
+#             "user_id": user.id,
+#             "username": user.username,
+#             "token": token,
+#             "email": user.email
+#         })
 
 # Get User API
 class UserAPI(generics.RetrieveAPIView):
-    # permission_classes = [permissions.IsAuthenticated,]
+    permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
 
     def get_object(self):
