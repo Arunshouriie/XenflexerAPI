@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import TimesheetEntry, UserProfile, upload_resume, DocumentUpload, voluntary_disclosures, workexpereience, education, JobOpportunity, Salescontact, ConatctUs
+from .models import TimesheetEntry, UserProfile, upload_resume, myexperience, DocumentUpload, voluntary_disclosures, education, JobOpportunity, Salescontact, ConatctUs
 
 class TimesheetEntrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,7 +33,7 @@ class UserTimesheetEntrySerializer(serializers.ModelSerializer):
 
 class workexpereienceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = workexpereience
+        model = myexperience
         fields = '__all__'
 
 class educationSerializer(serializers.ModelSerializer):

@@ -1,12 +1,12 @@
 from knox import views as knox_views
-from .views import LoginAPI,LogoutView, RegisterAPI, UploadresumeRetrieveUpdateDestroy, uploadresumelistcreate, UserAPI, ChangePasswordView, TimesheetEntryListCreate, TimesheetEntryRetrieveUpdateDestroy, UserProfileView, DocumentUploadListCreate, DocumentUploadRetrieveUpdateDestroy, voluntarydisclosureListCreate, voluntarydisclosureRetrieveUpdateDestroy, WorkexperienceView, EducationView, JobOpportunityListCreateView, SalescontactView, ConatctUsView, UserTimesheetEntryView
+from .views import LoginAPI,LogoutView, RegisterAPI, UploadresumeRetrieveUpdateDestroy, uploadresumelistcreate, UserAPI, ChangePasswordView, TimesheetEntryListCreate, TimesheetEntryRetrieveUpdateDestroy, UserProfileView, WorkexperienceView, DocumentUploadListCreate, DocumentUploadRetrieveUpdateDestroy, voluntarydisclosureListCreate, voluntarydisclosureRetrieveUpdateDestroy, EducationView, JobOpportunityListCreateView, SalescontactView, ConatctUsView, UserTimesheetEntryView
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 
 router = DefaultRouter()
 router.register(r'profile', UserProfileView, basename='user_profile'),
-router.register(r'workexperience', WorkexperienceView, basename='work_experience'),
+router.register(r'myexperience', WorkexperienceView, basename='work_experience'),
 router.register(r'education', EducationView, basename='education')
 router.register(r'contactsales', SalescontactView, basename = 'Salescontact')
 router.register(r'contactus', ConatctUsView, basename = 'Conatctus')

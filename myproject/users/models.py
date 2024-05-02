@@ -22,18 +22,18 @@ class TimesheetEntry(models.Model):
     approval_status = models.CharField(max_length=20, choices=APPROVAL_CHOICES)
     is_active = models.BooleanField(default=False)
 
-class workexpereience(models.Model):
-    job_title = models.CharField(max_length=100, blank=True, null=True)
-    location = models.CharField(max_length=100, blank=True, null=True)
-    company_name = models.CharField(max_length=100, blank=True, null=True)
-    startDate = models.DateField()
-    endDate = models.DateField()
-    currentCompany = models.BooleanField(default=False)
-
 class education(models.Model):
     school = models.CharField(max_length=100, blank=True, null=True)
     graduation = models.CharField(max_length=100, blank=True, null=True)
     fieldOfStudy = models.CharField(max_length=100, blank=True, null=True)
+    startDate = models.DateField()
+    endDate = models.DateField()
+
+class myexperience(models.Model):
+    job_title = models.CharField(max_length=100, blank=True, null=True)
+    company_name = models.CharField(max_length=100, blank=True, null=True)
+    location = models.CharField(max_length=100, blank=True, null=True)
+    currentCompany = models.BooleanField(default=False)
     startDate = models.DateField()
     endDate = models.DateField()
 

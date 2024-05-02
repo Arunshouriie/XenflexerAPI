@@ -18,8 +18,8 @@ from .serializers import JobOpportunitySerializer
 from django.conf import settings
 from knox.auth import TokenAuthentication
 from rest_framework.views import APIView
-from .models import TimesheetEntry, UserProfile, upload_resume, DocumentUpload, voluntary_disclosures, workexpereience, education, Salescontact, ConatctUs
-from .serializers import TimesheetEntrySerializer, UserProfileSerializer, uploadresumeSerializer, DocumentUploadSerializer, voluntarydisclosureSerializer, workexpereienceSerializer, educationSerializer, SalescontactSerializer, ConatctUsSerializer, UserTimesheetEntrySerializer
+from .models import TimesheetEntry, UserProfile, myexperience, upload_resume, DocumentUpload, voluntary_disclosures, education, Salescontact, ConatctUs
+from .serializers import TimesheetEntrySerializer, UserProfileSerializer, uploadresumeSerializer, DocumentUploadSerializer, voluntarydisclosureSerializer, educationSerializer, SalescontactSerializer, ConatctUsSerializer, UserTimesheetEntrySerializer, workexpereienceSerializer
 
 class TimesheetEntryListCreate(generics.ListCreateAPIView):
     queryset = TimesheetEntry.objects.all()
@@ -70,7 +70,7 @@ class UserProfileView(viewsets.ModelViewSet):
     # authentication_classes = (TokenAuthentication,) 
 
 class WorkexperienceView(viewsets.ModelViewSet):
-    queryset = workexpereience.objects.all()
+    queryset = myexperience.objects.all()
     serializer_class = workexpereienceSerializer
     # permission_classes = [permissions.IsAuthenticated]
     def create(self, request, *args, **kwargs):
