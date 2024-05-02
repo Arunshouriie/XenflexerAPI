@@ -73,11 +73,41 @@ class WorkexperienceView(viewsets.ModelViewSet):
     queryset = workexpereience.objects.all()
     serializer_class = workexpereienceSerializer
     # permission_classes = [permissions.IsAuthenticated]
+    def create(self, request, *args, **kwargs):
+        # Ensure incoming data is a list
+        if not isinstance(request.data, list):
+            return Response(
+                {"non_field_errors": "Expected a list of objects."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Validate and create each item in the list
+        serializer = self.get_serializer(data=request.data, many=True)  # Use many=True to handle lists
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class EducationView(viewsets.ModelViewSet):
     queryset = education.objects.all()
     serializer_class = educationSerializer
     # permission_classes = [permissions.IsAuthenticated]
+    def create(self, request, *args, **kwargs):
+        # Ensure incoming data is a list
+        if not isinstance(request.data, list):
+            return Response(
+                {"non_field_errors": "Expected a list of objects."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Validate and create each item in the list
+        serializer = self.get_serializer(data=request.data, many=True)  # Use many=True to handle lists
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class DocumentUploadListCreate(generics.ListCreateAPIView):
     queryset = DocumentUpload.objects.all()

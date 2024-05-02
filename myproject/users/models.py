@@ -31,16 +31,17 @@ class workexpereience(models.Model):
     currentCompany = models.BooleanField(default=False)
 
 class education(models.Model):
-    university = models.CharField(max_length=100, blank=True, null=True)
+    school = models.CharField(max_length=100, blank=True, null=True)
     graduation = models.CharField(max_length=100, blank=True, null=True)
-    field_of_study = models.CharField(max_length=100, blank=True, null=True)
-    select_period = DateRangeField()
+    fieldOfStudy = models.CharField(max_length=100, blank=True, null=True)
+    startDate = models.DateField()
+    endDate = models.DateField()
 
 class DocumentUpload(models.Model):
     certificate = models.FileField(upload_to='certificates/')
     resume = models.FileField(upload_to='resumes/')
-    tax_document = models.FileField(upload_to='tax_documents/')
-    proof_of_identification = models.FileField(upload_to='proof_of_identifications/')
+    tax = models.FileField(upload_to='tax_documents/')
+    proof = models.FileField(upload_to='proof_of_identifications/')
     agreement = models.FileField(upload_to='agreements/')
     uploaded_at = models.DateTimeField(auto_now_add=True)   
 
