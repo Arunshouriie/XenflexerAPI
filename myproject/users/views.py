@@ -16,7 +16,7 @@ from django.core.mail import send_mail
 from .models import JobOpportunity
 from .serializers import JobOpportunitySerializer
 from django.conf import settings
-
+from knox.auth import TokenAuthentication
 from rest_framework.views import APIView
 from .models import TimesheetEntry, UserProfile, DocumentUpload, voluntary_disclosures, workexpereience, education, Salescontact, ConatctUs
 from .serializers import TimesheetEntrySerializer, UserProfileSerializer, DocumentUploadSerializer, voluntarydisclosureSerializer, workexpereienceSerializer, educationSerializer, SalescontactSerializer, ConatctUsSerializer, UserTimesheetEntrySerializer
@@ -24,7 +24,7 @@ from .serializers import TimesheetEntrySerializer, UserProfileSerializer, Docume
 class TimesheetEntryListCreate(generics.ListCreateAPIView):
     queryset = TimesheetEntry.objects.all()
     serializer_class = TimesheetEntrySerializer
-    permission_classes = [permissions.IsAdminUser]
+    # permission_classes = [permissions.IsAdminUser]
 
     def perform_create(self, serializer):
         serializer.save()
@@ -32,11 +32,11 @@ class TimesheetEntryListCreate(generics.ListCreateAPIView):
 class TimesheetEntryRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = TimesheetEntry.objects.all()
     serializer_class = TimesheetEntrySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
 class TimesheetEntryListCreate(generics.ListCreateAPIView):
     serializer_class = TimesheetEntrySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         approval_status = self.request.query_params.get('approval_status', None)
@@ -47,7 +47,7 @@ class TimesheetEntryListCreate(generics.ListCreateAPIView):
 class UserTimesheetEntryView(viewsets.ModelViewSet):
    queryset = TimesheetEntry.objects.all()
    serializer_class = UserTimesheetEntrySerializer
-   permission_classes = [permissions.IsAuthenticated]
+#    permission_classes = [permissions.IsAuthenticated]
 
    def get_queryset(self):
         # Only return timesheets created by the logged-in user
@@ -66,37 +66,38 @@ class LogoutView(KnoxLogoutView):
 class UserProfileView(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
+    # authentication_classes = (TokenAuthentication,) 
 
 class WorkexperienceView(viewsets.ModelViewSet):
     queryset = workexpereience.objects.all()
     serializer_class = workexpereienceSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
 class EducationView(viewsets.ModelViewSet):
     queryset = education.objects.all()
     serializer_class = educationSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
 class DocumentUploadListCreate(generics.ListCreateAPIView):
     queryset = DocumentUpload.objects.all()
     serializer_class = DocumentUploadSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
 class DocumentUploadRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = DocumentUpload.objects.all()
     serializer_class = DocumentUploadSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
 class voluntarydisclosureListCreate(generics.ListCreateAPIView):
     queryset = voluntary_disclosures.objects.all()
     serializer_class = voluntarydisclosureSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
 class voluntarydisclosureRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = voluntary_disclosures.objects.all()
     serializer_class = voluntarydisclosureSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
 # Register API
 class RegisterAPI(generics.GenericAPIView):
@@ -136,7 +137,7 @@ class LoginAPI(KnoxLoginView):
 
 # Get User API
 class UserAPI(generics.RetrieveAPIView):
-    permission_classes = [permissions.IsAuthenticated,]
+    # permission_classes = [permissions.IsAuthenticated,]
     serializer_class = UserSerializer
 
     def get_object(self):
@@ -209,7 +210,7 @@ class ChangePasswordView(generics.UpdateAPIView):
     """
     serializer_class = ChangePasswordSerializer
     model = User
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def get_object(self, queryset=None):
         obj = self.request.user
