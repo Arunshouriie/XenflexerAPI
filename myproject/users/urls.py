@@ -1,5 +1,5 @@
 from knox import views as knox_views
-from .views import LoginAPI,LogoutView, RegisterAPI, UploadresumeRetrieveUpdateDestroy, uploadresumelistcreate, UserAPI, ChangePasswordView, TimesheetEntryListCreate, TimesheetEntryRetrieveUpdateDestroy, UserProfileView, WorkexperienceView, DocumentUploadListCreate, DocumentUploadRetrieveUpdateDestroy, voluntarydisclosureListCreate, voluntarydisclosureRetrieveUpdateDestroy, EducationView, JobOpportunityListCreateView, SalescontactView, ConatctUsView, UserTimesheetEntryView
+from .views import LoginAPI,LogoutView, RegisterAPI, UploadresumeRetrieveUpdateDestroy, uploadresumelistcreate, UserAPI, ChangePasswordView, TimesheetEntryListCreate, TimesheetEntryRetrieveUpdateDestroy, UserProfileView, WorkexperienceView, voluntarydisclosureListCreate, voluntarydisclosureRetrieveUpdateDestroy, JobOpportunityListCreateView, SalescontactView, ConatctUsView, UserTimesheetEntryView, EducationView, DocumentUploadListCreate, DocumentUploadRetrieveUpdateDestroy
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 

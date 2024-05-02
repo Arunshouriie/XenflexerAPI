@@ -22,13 +22,6 @@ class TimesheetEntry(models.Model):
     approval_status = models.CharField(max_length=20, choices=APPROVAL_CHOICES)
     is_active = models.BooleanField(default=False)
 
-class education(models.Model):
-    school = models.CharField(max_length=100, blank=True, null=True)
-    graduation = models.CharField(max_length=100, blank=True, null=True)
-    fieldOfStudy = models.CharField(max_length=100, blank=True, null=True)
-    startDate = models.DateField()
-    endDate = models.DateField()
-
 class myexperience(models.Model):
     job_title = models.CharField(max_length=100, blank=True, null=True)
     company_name = models.CharField(max_length=100, blank=True, null=True)
@@ -37,13 +30,21 @@ class myexperience(models.Model):
     startDate = models.DateField()
     endDate = models.DateField()
 
-class DocumentUpload(models.Model):
+class myeducation(models.Model):
+    school = models.CharField(max_length=100, blank=True, null=True)
+    graduation = models.CharField(max_length=100, blank=True, null=True)
+    fieldOfStudy = models.CharField(max_length=100, blank=True, null=True)
+    startDate = models.DateField()
+    endDate = models.DateField()
+
+class DocumentsUpload(models.Model):
     certificate = models.FileField(upload_to='certificates/')
     resume = models.FileField(upload_to='resumes/')
     tax = models.FileField(upload_to='tax_documents/')
     proof = models.FileField(upload_to='proof_of_identifications/')
     agreement = models.FileField(upload_to='agreements/')
-    uploaded_at = models.DateTimeField(auto_now_add=True)   
+    uploaded_at = models.DateTimeField(auto_now_add=True) 
+
 
 class upload_resume(models.Model):
     upload = models.FileField(upload_to='resume/')

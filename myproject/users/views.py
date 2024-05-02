@@ -18,8 +18,8 @@ from .serializers import JobOpportunitySerializer
 from django.conf import settings
 from knox.auth import TokenAuthentication
 from rest_framework.views import APIView
-from .models import TimesheetEntry, UserProfile, myexperience, upload_resume, DocumentUpload, voluntary_disclosures, education, Salescontact, ConatctUs
-from .serializers import TimesheetEntrySerializer, UserProfileSerializer, uploadresumeSerializer, DocumentUploadSerializer, voluntarydisclosureSerializer, educationSerializer, SalescontactSerializer, ConatctUsSerializer, UserTimesheetEntrySerializer, workexpereienceSerializer
+from .models import TimesheetEntry, UserProfile, myeducation, DocumentsUpload, myexperience, upload_resume, voluntary_disclosures, Salescontact, ConatctUs
+from .serializers import TimesheetEntrySerializer, UserProfileSerializer, uploadresumeSerializer, voluntarydisclosureSerializer, SalescontactSerializer, ConatctUsSerializer, UserTimesheetEntrySerializer, workexpereienceSerializer, educationSerializer, DocumentUploadSerializer
 
 class TimesheetEntryListCreate(generics.ListCreateAPIView):
     queryset = TimesheetEntry.objects.all()
@@ -90,7 +90,7 @@ class WorkexperienceView(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class EducationView(viewsets.ModelViewSet):
-    queryset = education.objects.all()
+    queryset = myeducation.objects.all()
     serializer_class = educationSerializer
     # permission_classes = [permissions.IsAuthenticated]
     def create(self, request, *args, **kwargs):
@@ -110,22 +110,21 @@ class EducationView(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class DocumentUploadListCreate(generics.ListCreateAPIView):
-    queryset = DocumentUpload.objects.all()
+    queryset = DocumentsUpload.objects.all()
     serializer_class = DocumentUploadSerializer
     # permission_classes = [permissions.IsAuthenticated]
-
-class uploadresumelistcreate(generics.ListCreateAPIView):
-    queryset = upload_resume.objects.all()
-    serializer_class = uploadresumeSerializer
+class DocumentUploadRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = DocumentsUpload.objects.all()
+    serializer_class = DocumentUploadSerializer
 
 class UploadresumeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = upload_resume.objects.all()
     serializer_class = uploadresumeSerializer
 
-class DocumentUploadRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = DocumentUpload.objects.all()
-    serializer_class = DocumentUploadSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+class uploadresumelistcreate(generics.ListCreateAPIView):
+    queryset = upload_resume.objects.all()
+    serializer_class = uploadresumeSerializer
+
 
 class voluntarydisclosureListCreate(generics.ListCreateAPIView):
     queryset = voluntary_disclosures.objects.all()
