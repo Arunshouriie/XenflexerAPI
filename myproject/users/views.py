@@ -85,7 +85,7 @@ class LoginView(APIView):
 class TimesheetVIew(viewsets.ModelViewSet):
     queryset = Timesheet.objects.all()
     serializer_class = TimesheetSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     
     
 
