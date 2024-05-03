@@ -11,7 +11,7 @@ router.register(r'education', EducationView, basename='education')
 router.register(r'contactsales', SalescontactView, basename = 'Salescontact')
 router.register(r'contactus', ConatctUsView, basename = 'Conatctus')
 router.register(r'user/timesheets', UserTimesheetEntryView, basename = 'usertimesheets')
-router.register(r'admin/timesheets', TimesheetVIew, basename = 'AdminTimesheet')
+router.register(r'timesheetadmin', TimesheetVIew, basename = 'AdminTimesheet')
 
 
 urlpatterns = [
