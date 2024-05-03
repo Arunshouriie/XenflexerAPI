@@ -16,10 +16,11 @@ from django.core.mail import send_mail
 from .models import JobOpportunity
 from .serializers import JobOpportunitySerializer
 from django.conf import settings
+from .permissions import IsOwner
 from knox.auth import TokenAuthentication
 from rest_framework.views import APIView
-from .models import TimesheetEntry, UserDetails,MyEducation, MyExperience, Documentsupload, UploadResume, VoluntaryDisclosures, Salescontact, ConatctUs
-from .serializers import TimesheetEntrySerializer, UserProfileSerializer, uploadresumeSerializer, voluntarydisclosureSerializer, SalescontactSerializer, ConatctUsSerializer, UserTimesheetEntrySerializer, workexpereienceSerializer, educationSerializer, DocumentUploadSerializer
+from .models import TimesheetEntry, UserDetails,MyEducation, Timesheet, MyExperience, Documentsupload, UploadResume, VoluntaryDisclosures, Salescontact, ConatctUs
+from .serializers import TimesheetEntrySerializer, TimesheetSerializer, UserProfileSerializer, uploadresumeSerializer, voluntarydisclosureSerializer, SalescontactSerializer, ConatctUsSerializer, UserTimesheetEntrySerializer, workexpereienceSerializer, educationSerializer, DocumentUploadSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -81,6 +82,10 @@ class LoginView(APIView):
             }
         }, status=status.HTTP_200_OK)
 
+class TimesheetVIew(viewsets.ModelViewSet):
+    queryset = Timesheet.objects.all()
+    serializer_class = TimesheetSerializer
+    permission_classes = [IsAuthenticated]
 
 class TimesheetEntryListCreate(generics.ListCreateAPIView):
     queryset = TimesheetEntry.objects.all()
@@ -126,16 +131,35 @@ class UserTimesheetEntryView(viewsets.ModelViewSet):
 class UserProfileView(viewsets.ModelViewSet):
     queryset = UserDetails.objects.all()
     serializer_class = UserProfileSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
     # obj = OnboardConfirmation(user_id)
     # authentication_classes = (TokenAuthentication,) 
+    def get_object(self):
+        # Retrieve the user profile of the authenticated user
+        return UserDetails.objects.get(user=self.request.user)
 
+    def get(self, request):
+        # Get the user's profile using the get_object method
+        user_profile = self.get_object()
+        serializer = UserProfileSerializer(user_profile)
+        return Response(serializer.data)
+
+    def put(self, request):
+        # Update the user's profile
+        user_profile = self.get_object()
+        serializer = UserProfileSerializer(user_profile, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 # class OnboardConfirmationView():
 
 class WorkexperienceView(viewsets.ModelViewSet):
     queryset = MyExperience.objects.all()
     serializer_class = workexpereienceSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
     def create(self, request, *args, **kwargs):
         # Ensure incoming data is a list
         if not isinstance(request.data, list):
@@ -151,11 +175,33 @@ class WorkexperienceView(viewsets.ModelViewSet):
         
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    def get_object(self):
+        # Retrieve the user profile of the authenticated user
+        return MyExperience.objects.get(user=self.request.user)
+
+    def get(self, request):
+        # Get the user's profile using the get_object method
+        my_experience = self.get_object()
+        serializer = workexpereienceSerializer(my_experience)
+        return Response(serializer.data)
+
+    def put(self, request):
+        # Update the user's profile
+        my_experience = self.get_object()
+        serializer = workexpereienceSerializer(my_experience, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
 
 class EducationView(viewsets.ModelViewSet):
     queryset = MyEducation.objects.all()
     serializer_class = educationSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
     def create(self, request, *args, **kwargs):
         # Ensure incoming data is a list
         if not isinstance(request.data, list):
@@ -171,33 +217,74 @@ class EducationView(viewsets.ModelViewSet):
         
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    def get_object(self):
+        # Retrieve the user profile of the authenticated user
+        return MyEducation.objects.get(user=self.request.user)
+
+    def get(self, request):
+        # Get the user's profile using the get_object method
+        user_profile = self.get_object()
+        serializer = UserProfileSerializer(user_profile)
+        return Response(serializer.data)
+
+    def put(self, request):
+        # Update the user's profile
+        user_profile = self.get_object()
+        serializer = UserProfileSerializer(user_profile, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DocumentUploadListCreate(generics.ListCreateAPIView):
     queryset = Documentsupload.objects.all()
     serializer_class = DocumentUploadSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def get_object(self):
+        # Retrieve the user profile of the authenticated user
+        return Documentsupload.objects.get(user=self.request.user)
+
+    def get(self, request):
+        # Get the user's profile using the get_object method
+        user_profile = self.get_object()
+        serializer = UserProfileSerializer(user_profile)
+        return Response(serializer.data)
+
+    def put(self, request):
+        # Update the user's profile
+        user_profile = self.get_object()
+        serializer = UserProfileSerializer(user_profile, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class DocumentUploadRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Documentsupload.objects.all()
     serializer_class = DocumentUploadSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 class UploadresumeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = UploadResume.objects.all()
     serializer_class = uploadresumeSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 class uploadresumelistcreate(generics.ListCreateAPIView):
     queryset = UploadResume.objects.all()
     serializer_class = uploadresumeSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 
 class voluntarydisclosureListCreate(generics.ListCreateAPIView):
     queryset = VoluntaryDisclosures.objects.all()
     serializer_class = voluntarydisclosureSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 
 class voluntarydisclosureRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = VoluntaryDisclosures.objects.all()
     serializer_class = voluntarydisclosureSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
 
 # Register API
 # class RegisterAPI(generics.GenericAPIView):

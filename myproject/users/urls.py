@@ -1,5 +1,5 @@
 from knox import views as knox_views
-from .views import RegisterView, LoginView, UploadresumeRetrieveUpdateDestroy, uploadresumelistcreate, UserAPI, ChangePasswordView, TimesheetEntryListCreate, TimesheetEntryRetrieveUpdateDestroy, UserProfileView, WorkexperienceView, voluntarydisclosureListCreate, voluntarydisclosureRetrieveUpdateDestroy, JobOpportunityListCreateView, SalescontactView, ConatctUsView, UserTimesheetEntryView, EducationView, DocumentUploadListCreate, DocumentUploadRetrieveUpdateDestroy
+from .views import RegisterView, LoginView, TimesheetVIew, UploadresumeRetrieveUpdateDestroy, uploadresumelistcreate, UserAPI, ChangePasswordView, TimesheetEntryListCreate, TimesheetEntryRetrieveUpdateDestroy, UserProfileView, WorkexperienceView, voluntarydisclosureListCreate, voluntarydisclosureRetrieveUpdateDestroy, JobOpportunityListCreateView, SalescontactView, ConatctUsView, UserTimesheetEntryView, EducationView, DocumentUploadListCreate, DocumentUploadRetrieveUpdateDestroy
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
@@ -11,6 +11,7 @@ router.register(r'education', EducationView, basename='education')
 router.register(r'contactsales', SalescontactView, basename = 'Salescontact')
 router.register(r'contactus', ConatctUsView, basename = 'Conatctus')
 router.register(r'user/timesheets', UserTimesheetEntryView, basename = 'usertimesheets')
+router.register(r'admin/timehseets', TimesheetVIew, basename = 'AdminTimesheet')
 
 
 urlpatterns = [

@@ -9,6 +9,12 @@ from django.db import models
 from django.contrib.postgres.fields import DateRangeField
 from django.contrib.auth.models import User
 
+class Timesheet(models.Model):
+    name = models.CharField(max_length=100)
+    startDdate = models.DateField()
+    endDate = models.DateField()
+    applicableTo = models.ManyToManyField(User)
+    is_active = models.BooleanField(default=False)
 class TimesheetEntry(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
