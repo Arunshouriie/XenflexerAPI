@@ -107,7 +107,7 @@ class UserDetails(models.Model):
 #         ('no', 'no')
 #     ] 
 #     selectYESifyouareokayreceivingEmailNotificationforNewsletter = models.CharField(max_length=255, choices = UPDATE_CHOICES, null = True)
-#     my_info = models.BooleanField(default=False)
+    my_info = models.BooleanField(default=False)
 #     my_exp = models.BooleanField(default=False)
 #     my_edu = models.BooleanField(default=False)
 #     docs = models.BooleanField(default=False)
