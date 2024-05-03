@@ -85,17 +85,8 @@ class LoginView(APIView):
 class TimesheetVIew(viewsets.ModelViewSet):
     queryset = Timesheet.objects.all()
     serializer_class = TimesheetSerializer
-    permission_classes = [IsAuthenticated]
-    def get_queryset(self):
-        # Only return timesheets created by the logged-in user
-        return Timesheet.objects.filter(users=self.request.user)
-
-    def perform_create(self, serializer):
-        # Save timesheet with the logged-in user as the owner
-        serializer.save(users=self.request.user)
-    def get_queryset(self):
-        # Get all timesheets assigned to the logged-in user, sorted by date (latest first)
-        return Timesheet.objects.filter(users=self.request.user, is_active=True).order_by('-start_date')
+    # permission_classes = [IsAuthenticated]
+    
     
 
 class TimesheetEntryListCreate(generics.ListCreateAPIView):

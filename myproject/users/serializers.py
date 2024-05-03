@@ -30,6 +30,24 @@ class TimesheetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Timesheet
         fields = '__all__'
+    
+    def create(self, validated_data):
+        users_data = validated_data.pop('users', [])
+        timesheet = Timesheet.objects.create(**validated_data)
+
+        # Use set() to assign users to the timesheet
+        timesheet.users.set(users_data)
+
+        return timesheet
+
+    def update(self, instance, validated_data):
+        users_data = validated_data.pop('users', None)
+
+        if users_data is not None:
+            # Use set() to update the users for the timesheet
+            instance.users.set(users_data)
+
+        return super().update(instance, validated_data)
 
 class educationSerializer(serializers.ModelSerializer):
     class Meta:
