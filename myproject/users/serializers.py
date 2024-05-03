@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import TimesheetEntry, UserProfile, myeducation, DocumentsUpload, upload_resume, myexperience, voluntary_disclosures, JobOpportunity, Salescontact, ConatctUs
+from .models import TimesheetEntry, UserDetails, VoluntaryDisclosures, UploadResume, MyEducation, MyExperience, Documentsupload, JobOpportunity, Salescontact, ConatctUs
 
 class TimesheetEntrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,11 +28,11 @@ class TimesheetEntrySerializer(serializers.ModelSerializer):
 
 class educationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = myeducation
+        model = MyEducation
         fields = '__all__'
 class DocumentUploadSerializer(serializers.ModelSerializer):
     class Meta:
-        model = DocumentsUpload
+        model = Documentsupload
         fields = '__all__'
 
 class UserTimesheetEntrySerializer(serializers.ModelSerializer):
@@ -42,18 +42,23 @@ class UserTimesheetEntrySerializer(serializers.ModelSerializer):
 
 class workexpereienceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = myexperience
+        model = MyExperience
         fields = '__all__'
+
+# class OnboardConfirmationSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = OnboardConfirmation
+#         fields = '__all__'
 
 class uploadresumeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = upload_resume
+        model = UploadResume
         fields = '__all__'
 
 
 class voluntarydisclosureSerializer(serializers.ModelSerializer):
     class Meta:
-        model = voluntary_disclosures
+        model = VoluntaryDisclosures
         fields = '__all__'
 
 class ConatctUsSerializer(serializers.ModelSerializer):
@@ -86,8 +91,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserProfile
-        fields = '__all__'
+        model = UserDetails
+        fields = ['mobile','how_did_you_hear_about_us', 'country', 'working_on_project', 'xenspire_is_the_employer', 'do_you_want_xenspire_to_be', 'my_info']
 
 class JobOpportunitySerializer(serializers.ModelSerializer):
     class Meta:

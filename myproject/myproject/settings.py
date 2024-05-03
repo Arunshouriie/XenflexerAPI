@@ -96,10 +96,10 @@ DATABASES = {
 
 'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'opsdb',
-        'HOST': 'c-xenflexer.ldkjg54wy5a3cd.postgres.cosmos.azure.com',
+        'NAME': 'xendb',
+        'HOST': 'c-xenflexer01.zokfessd4aszgp.postgres.cosmos.azure.com',
         'USER': 'citus',
-        'PASSWORD': 'ops@1504',
+        'PASSWORD': 'Admin0503',
         'sslmode' : 'require'
     }  
 }

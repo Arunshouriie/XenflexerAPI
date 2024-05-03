@@ -18,7 +18,7 @@ from .serializers import JobOpportunitySerializer
 from django.conf import settings
 from knox.auth import TokenAuthentication
 from rest_framework.views import APIView
-from .models import TimesheetEntry, UserProfile, myeducation, DocumentsUpload, myexperience, upload_resume, voluntary_disclosures, Salescontact, ConatctUs
+from .models import TimesheetEntry, UserDetails,MyEducation, MyExperience, Documentsupload, UploadResume, VoluntaryDisclosures, Salescontact, ConatctUs
 from .serializers import TimesheetEntrySerializer, UserProfileSerializer, uploadresumeSerializer, voluntarydisclosureSerializer, SalescontactSerializer, ConatctUsSerializer, UserTimesheetEntrySerializer, workexpereienceSerializer, educationSerializer, DocumentUploadSerializer
 from rest_framework import status
 from rest_framework.response import Response
@@ -72,7 +72,14 @@ class LoginView(APIView):
 
         tokens = get_tokens_for_user(user)
 
-        return Response({'tokens': tokens})
+        # return Response({'tokens': tokens})
+        return Response({
+            'tokens': tokens,
+            'user': {
+                'username': user.username,
+                'email': user.email
+            }
+        }, status=status.HTTP_200_OK)
 
 
 class TimesheetEntryListCreate(generics.ListCreateAPIView):
@@ -117,13 +124,16 @@ class UserTimesheetEntryView(viewsets.ModelViewSet):
 #     permission_classes = (permissions.IsAuthenticated,)
 
 class UserProfileView(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all()
+    queryset = UserDetails.objects.all()
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
+    # obj = OnboardConfirmation(user_id)
     # authentication_classes = (TokenAuthentication,) 
 
+# class OnboardConfirmationView():
+
 class WorkexperienceView(viewsets.ModelViewSet):
-    queryset = myexperience.objects.all()
+    queryset = MyExperience.objects.all()
     serializer_class = workexpereienceSerializer
     permission_classes = [IsAuthenticated]
     def create(self, request, *args, **kwargs):
@@ -143,7 +153,7 @@ class WorkexperienceView(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class EducationView(viewsets.ModelViewSet):
-    queryset = myeducation.objects.all()
+    queryset = MyEducation.objects.all()
     serializer_class = educationSerializer
     permission_classes = [IsAuthenticated]
     def create(self, request, *args, **kwargs):
@@ -163,29 +173,29 @@ class EducationView(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class DocumentUploadListCreate(generics.ListCreateAPIView):
-    queryset = DocumentsUpload.objects.all()
+    queryset = Documentsupload.objects.all()
     serializer_class = DocumentUploadSerializer
     permission_classes = [IsAuthenticated]
 class DocumentUploadRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = DocumentsUpload.objects.all()
+    queryset = Documentsupload.objects.all()
     serializer_class = DocumentUploadSerializer
     permission_classes = [IsAuthenticated]
 class UploadresumeRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = upload_resume.objects.all()
+    queryset = UploadResume.objects.all()
     serializer_class = uploadresumeSerializer
     permission_classes = [IsAuthenticated]
 class uploadresumelistcreate(generics.ListCreateAPIView):
-    queryset = upload_resume.objects.all()
+    queryset = UploadResume.objects.all()
     serializer_class = uploadresumeSerializer
     permission_classes = [IsAuthenticated]
 
 class voluntarydisclosureListCreate(generics.ListCreateAPIView):
-    queryset = voluntary_disclosures.objects.all()
+    queryset = VoluntaryDisclosures.objects.all()
     serializer_class = voluntarydisclosureSerializer
     permission_classes = [IsAuthenticated]
 
 class voluntarydisclosureRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
-    queryset = voluntary_disclosures.objects.all()
+    queryset = VoluntaryDisclosures.objects.all()
     serializer_class = voluntarydisclosureSerializer
     permission_classes = [IsAuthenticated]
 
